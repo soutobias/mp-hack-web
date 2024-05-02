@@ -10,19 +10,12 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import * as L from 'leaflet'
 import { Loading } from '../Loading'
 
-interface DisplayPositionProps {
-  map: any
-  depth: any
-}
-
-interface keyable {
-  [key: string]: any
-}
-
 interface MapProps {
+  mpData: any
+  setLoading: any
 }
 
-function MapHome1({}: MapProps) {
+function MapHome1({mpData, setLoading}: MapProps) {
   const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_API_KEY
   const MAPBOX_USERID = 'mapbox/satellite-v9'
 
@@ -34,8 +27,33 @@ function MapHome1({}: MapProps) {
     new L.LatLng(defaultView[0], defaultView[1]),
   )
 
-  const [loading, setLoading] = useState<boolean>(false)
+  function createPopupText(mpData: any) {
+    return `
+    <div>
+      <h2>${mpData.Name}</h2>
+      <h3>${mpData.SubjectName}</h3>
+      <p>${mpData.UniName}</p>
+      <div className="flex justify-center items-center">
+        <img src=${mpData.PhotoURL} alt=${mpData.Name} height="100"/>
+      </div>
+    </div>
+    `
+  }
+  useEffect(() => {
+    if(mpData){
+      if(map){
+        mpData.forEach(mpData =>{
+          const marker = L.marker([mpData.lat, mpData.lng]).addTo(map)
+          const popupText = createPopupText(mpData)
+          marker.bindPopup(popupText);
+        })
+      }
+    }
+    setLoading(false)
+  }, [mpData])
 
+
+  console.log(mpData)
   const displayMap = useMemo(
     () => (
       <MapContainer
@@ -52,7 +70,7 @@ function MapHome1({}: MapProps) {
         <ZoomControl position="topright" />
         {/* <ScaleControl position="topright" /> */}
         <LayersControl>
-          <LayersControl.BaseLayer checked name="Esti Satellite">
+          <LayersControl.BaseLayer name="Esti Satellite">
             <Pane name="ESRI" style={{ zIndex: -1 }}>
               <TileLayer
                 url={`https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}`}
@@ -68,7 +86,7 @@ function MapHome1({}: MapProps) {
               />
             </Pane>
           </LayersControl.BaseLayer>
-          <LayersControl.BaseLayer name="OSM">
+          <LayersControl.BaseLayer  checked name="OSM">
             <Pane name="OSM" style={{ zIndex: -1 }}>
               <TileLayer
                 attribution={'© OpenStreetMap'}
@@ -106,13 +124,14 @@ function MapHome1({}: MapProps) {
   return (
     <div>
       {displayMap}
-      {loading ? <Loading /> : null}
     </div>
   )
 }
 
 function mapPropsAreEqual(prevMap: any, nextMap: any) {
-  return (true)
+  return (
+    prevMap.mpData === nextMap.mpData
+  )
 }
 
 export const MapHome = React.memo(MapHome1, mapPropsAreEqual)
