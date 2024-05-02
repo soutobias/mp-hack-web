@@ -31,11 +31,7 @@ function MapHome1({mpData, setLoading}: MapProps) {
     return `
     <div>
       <h2>${mpData.Name}</h2>
-      <h3>${mpData.SubjectName}</h3>
       <p>${mpData.UniName}</p>
-      <div className="flex justify-center items-center">
-        <img src=${mpData.PhotoURL} alt=${mpData.Name} height="100"/>
-      </div>
     </div>
     `
   }
