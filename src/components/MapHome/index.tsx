@@ -39,11 +39,19 @@ function MapHome1({mpData, setLoading}: MapProps) {
     </div>
     `
   }
+
+  var defaultIcon = L.icon({
+    iconUrl: 'marker-icon_red.png',
+    iconSize:     [27, 27], // size of the icon
+    iconAnchor:   [0, 0], // point of the icon which will correspond to marker's location
+    // popupAnchor:  [0, -76] // point from which the popup should open relative to the iconAnchor
+});
+
   useEffect(() => {
     if(mpData){
       if(map){
         mpData.forEach(mpData =>{
-          const marker = L.marker([mpData.lat, mpData.lng]).addTo(map)
+          const marker = L.marker([mpData.lat, mpData.lng], {icon: defaultIcon}).addTo(map)
           const popupText = createPopupText(mpData)
           marker.bindPopup(popupText);
         })
