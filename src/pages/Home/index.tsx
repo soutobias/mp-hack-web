@@ -6,6 +6,7 @@ import { Loading } from '../../components/Loading'
 import { loadAllCsvData, loadCsvData } from '../../data/api'
 import { fetchApi } from '../../lib/api'
 import { InfoButtonBox } from '../../components/InfoButtonBox'
+import { FullPagePopup } from '../../components/FullPagePopup'
 
 export function Home() {
   const [selectedSidebarOption, setSelectedSidebarOption] = useState<string>('')
@@ -15,7 +16,7 @@ export function Home() {
   const [loading, setLoading] = useState(false)
 
   const [showUniInfo, setShowUniInfo] = useState(false)
-
+  const [showPopup, setShowPopup] = useState(false)
   useEffect(() => {
     fetchApi('relationship', setMpData)
   }, [])
@@ -39,10 +40,11 @@ export function Home() {
           setSelectedSidebarOption={setSelectedSidebarOption}
           loading={loading}
           mpData={mpData}
-          setShowUniInfo={setShowUniInfo}
+          setShowPopup={setShowPopup}
       />
         {Object.keys(showUniInfo).length > 0 && <InfoButtonBox showUniInfo={showUniInfo} setShowUniInfo={setShowUniInfo}/>}
       </SideBar>
+      {showPopup && <FullPagePopup setShowPopup={setShowPopup} />}
       <MapHome mpData={mpData} setLoading={setLoading}/>
       {loading ? <Loading /> : null}
     </HomeContainer>

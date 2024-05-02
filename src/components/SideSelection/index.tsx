@@ -13,7 +13,7 @@ interface SideSelectionProps {
   setSelectedSidebarOption: any
   loading: boolean
   mpData: any
-  setShowUniInfo: any
+  setShowPopup: any
 }
 
 export function SideSelection({
@@ -21,7 +21,7 @@ export function SideSelection({
   setSelectedSidebarOption,
   loading,
   mpData,
-  setShowUniInfo
+  setShowPopup
 }: SideSelectionProps) {
   const navigate = useNavigate()
 
@@ -35,11 +35,12 @@ export function SideSelection({
   }
 
   async function handleShowSelectionUni(e: any) {
-    fetchApi('most_popular', setShowUniInfo)
+    fetchApi('most_popular', setShowPopup)
   }
 
   async function handleGoToDashboard(e: any) {
-    navigate('/dashboard')
+    // navigate('/dashboard')
+    setShowPopup(true)
     // fetchApi('most_popular', setShowUniInfo)
   }
 
